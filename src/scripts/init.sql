@@ -1,5 +1,5 @@
 -- USERS
-CREATE TABLE users (
+CREATE TABLE if NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     nome_completo VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
@@ -8,7 +8,7 @@ CREATE TABLE users (
 );
 
 -- PROJECTS
-CREATE TABLE projects (
+CREATE TABLE if NOT EXISTS projects (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     descricao TEXT,
@@ -19,7 +19,7 @@ CREATE TABLE projects (
 );
 
 -- TASKS
-CREATE TABLE tasks (
+CREATE TABLE if NOT EXISTS tasks (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     descricao TEXT,
@@ -33,7 +33,7 @@ CREATE TABLE tasks (
 );
 
 -- COMMENTS
-CREATE TABLE comments (
+CREATE TABLE if NOT EXISTS comments (
     id SERIAL PRIMARY KEY,
     conteudo TEXT NOT NULL,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
