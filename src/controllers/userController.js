@@ -1,70 +1,61 @@
-// controllers/userController.js
+const svc = require("../services/usersService");
 
-const userService = require('../services/userService');
-
-const getAllUsers = async (req, res) => {
+exports.create = async (req, res) => {
   try {
-    const users = await userService.getAllUsers();
-    res.status(200).json(users);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-const getUserById = async (req, res) => {
-  try {
-    const user = await userService.getUserById(req.params.id);
-    if (user) {
-      res.status(200).json(user);
-    } else {
-      res.status(404).json({ error: 'Usuário não encontrado' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-const createUser = async (req, res) => {
-  try {
-    const { name, email } = req.body;
-    const newUser = await userService.createUser(name, email);
+    const newUser = await svc.create(req.body);
+    console.log("Usuário Criado:", newUser);
     res.status(201).json(newUser);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+  } catch (e) {
+    console.error("Erro ao criar usuário:", e);
+    res.status(400).json({ error: e.message });
   }
 };
 
-const updateUser = async (req, res) => {
+exports.list = async (_, res) => {
   try {
-    const { name, email } = req.body;
-    const updatedUser = await userService.updateUser(req.params.id, name, email);
-    if (updatedUser) {
-      res.status(200).json(updatedUser);
-    } else {
-      res.status(404).json({ error: 'Usuário não encontrado' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    const users = await svc.list();
+    console.log("Usuários retornados:", users);
+    res.json(users);
+  } catch (e) {
+    console.error("Erro ao listar usuários:", e);
+    res.status(500).json({ error: e.message });
   }
 };
 
-const deleteUser = async (req, res) => {
+exports.detail = async (req, res) => {
   try {
-    const deletedUser = await userService.deleteUser(req.params.id);
-    if (deletedUser) {
-      res.status(200).json(deletedUser);
-    } else {
-      res.status(404).json({ error: 'Usuário não encontrado' });
+    const user = await svc.detail(req.params.id);
+    console.log("Usuário encontrado:", user);
+    if (!user) {
+      return res.status(404).json({ error: "Usuário não encontrado" });
     }
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.json(user);
+  } catch (e) {
+    console.error("Erro ao buscar usuário:", e);
+    res.status(500).json({ error: e.message });
   }
 };
 
-module.exports = {
-  getAllUsers,
-  getUserById,
-  createUser,
-  updateUser,
-  deleteUser
+exports.update = async (req, res) => {
+  try {
+    const updatedUser = await svc.update(req.params.id, req.body);
+    console.log("Usuário atualizado:", updatedUser);
+    res.json(updatedUser);
+  } catch (e) {
+    console.error("Erro ao atualizar usuário:", e);
+    res.status(400).json({ error: e.message });
+  }
+};
+
+exports.remove = async (req, res) => {
+  try {
+    const id = req.params.id;
+    console.log(`Removendo usuário com ID: ${id}`);
+    await svc.remove(id);
+    console.log(`Usuário com ID ${id} removido com sucesso`);
+    res.sendStatus(204);
+  } catch (e) {
+    console.error("Erro ao remover usuário:", e);
+    res.status(500).json({ error: e.message });
+  }
 };
