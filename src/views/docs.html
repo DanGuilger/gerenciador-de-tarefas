@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Documentação da API - Sistema de Gerenciamento de Projetos</title>
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      max-width: 900px;
+      margin: 2rem auto;
+      line-height: 1.6;
+      padding: 0 1rem;
+    }
+    code {
+      background: #f4f4f4;
+      padding: 2px 4px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+    }
+    pre {
+      background: #f8f8f8;
+      padding: 1rem;
+      border-radius: 5px;
+      overflow-x: auto;
+      border-left: 4px solid #007acc;
+    }
+    h1 {
+      color: #2c3e50;
+      border-bottom: 3px solid #3498db;
+      padding-bottom: 0.5rem;
+    }
+    h2 {
+      margin-top: 2.5rem;
+      color: #34495e;
+      border-bottom: 2px solid #ecf0f1;
+      padding-bottom: 0.3rem;
+    }
+    ul {
+      padding-left: 1.5rem;
+    }
+    li {
+      margin-bottom: 0.8rem;
+    }
+    .method {
+      font-weight: bold;
+      color: #e67e22;
+    }
+    .endpoint {
+      font-weight: bold;
+      color: #27ae60;
+    }
+    .description {
+      color: #7f8c8d;
+      font-style: italic;
+    }
+    .example {
+      margin-top: 0.5rem;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <h1>API - Sistema de Gerenciamento de Projetos</h1>
+  <p>Esta aplicação expõe quatro conjuntos de endpoints REST para gerenciar usuários, projetos, tarefas e comentários. Todos os endpoints aceitam e devolvem JSON.</p>
+
+  <h2>1. Usuários (/api/users)</h2>
+  <ul>
+    <li>
+      <span class="method">GET</span> <span class="endpoint">/api/users</span> – lista todos os usuários.
+    </li>
+    <li>
+      <span class="method">POST</span> <span class="endpoint">/api/users</span> – cria um novo usuário.<br>
+      <div class="example">Exemplo de corpo: <code>{"name":"João Silva","email":"joao@exemplo.com","password":"123456"}</code></div>
+    </li>
+    <li>
+      <span class="method">GET</span> <span class="endpoint">/api/users/:id</span> – obtém detalhes de um usuário específico.
+    </li>
+    <li>
+      <span class="method">PUT</span> <span class="endpoint">/api/users/:id</span> – atualiza dados de um usuário.
+    </li>
+    <li>
+      <span class="method">DELETE</span> <span class="endpoint">/api/users/:id</span> – remove um usuário.
+    </li>
+  </ul>
+
+  <h2>2. Projetos (/api/projects)</h2>
+  <ul>
+    <li>
+      <span class="method">GET</span> <span class="endpoint">/api/projects</span> – lista todos os projetos.
+    </li>
+    <li>
+      <span class="method">POST</span> <span class="endpoint">/api/projects</span> – cria um novo projeto.<br>
+      <div class="example">Exemplo: <code>{"name":"Sistema de Vendas","description":"Sistema para gerenciar vendas","creatorId":1}</code></div>
+    </li>
+    <li>
+      <span class="method">GET</span> <span class="endpoint">/api/projects/:id</span> – obtém detalhes de um projeto específico.
+    </li>
+    <li>
+      <span class="method">PUT</span> <span class="endpoint">/api/projects/:id</span> – atualiza dados de um projeto.
+    </li>
+    <li>
+      <span class="method">DELETE</span> <span class="endpoint">/api/projects/:id</span> – remove um projeto.
+    </li>
+    <li>
+      <span class="method">GET</span> <span class="endpoint">/api/projects/creator/:creatorId</span> – lista projetos criados por um usuário específico.
+    </li>
+  </ul>
+
+  <h2>3. Tarefas (/api/tasks)</h2>
+  <ul>
+    <li>
+      <span class="method">GET</span> <span class="endpoint">/api/tasks</span> – lista todas as tarefas.
+    </li>
+    <li>
+      <span class="method">POST</span> <span class="endpoint">/api/tasks</span> – cria uma nova tarefa.<br>
+      <div class="example">Exemplo: <code>{"title":"Implementar login","description":"Criar sistema de autenticação","projectId":1,"userId":2}</code></div>
+    </li>
+    <li>
+      <span class="method">GET</span> <span class="endpoint">/api/tasks/:id</span> – obtém detalhes de uma tarefa específica.
+    </li>
+    <li>
+      <span class="method">PUT</span> <span class="endpoint">/api/tasks/:id</span> – atualiza dados de uma tarefa.
+    </li>
+    <li>
+      <span class="method">DELETE</span> <span class="endpoint">/api/tasks/:id</span> – remove uma tarefa.
+    </li>
+    <li>
+      <span class="method">PUT</span> <span class="endpoint">/api/tasks/:id/complete</span> – marca uma tarefa como concluída.
+    </li>
+    <li>
+      <span class="method">PUT</span> <span class="endpoint">/api/tasks/:id/incomplete</span> – marca uma tarefa como não concluída.
+    </li>
+    <li>
+      <span class="method">GET</span> <span class="endpoint">/api/tasks/user/:userId</span> – lista tarefas atribuídas a um usuário específico.
+    </li>
+    <li>
+      <span class="method">GET</span> <span class="endpoint">/api/tasks/project/:projectId</span> – lista tarefas de um projeto específico.
+    </li>
+  </ul>
+
+  <h2>4. Comentários (/api/comments)</h2>
+  <ul>
+    <li>
+      <span class="method">GET</span> <span class="endpoint">/api/comments</span> – lista todos os comentários.
+    </li>
+    <li>
+      <span class="method">POST</span> <span class="endpoint">/api/comments</span> – cria um novo comentário.<br>
+      <div class="example">Exemplo: <code>{"content":"Tarefa bem executada!","taskId":1,"userId":2}</code></div>
+    </li>
+    <li>
+      <span class="method">GET</span> <span class="endpoint">/api/comments/:id</span> – obtém detalhes de um comentário específico.
+    </li>
+    <li>
+      <span class="method">PUT</span> <span class="endpoint">/api/comments/:id</span> – atualiza um comentário.
+    </li>
+    <li>
+      <span class="method">DELETE</span> <span class="endpoint">/api/comments/:id</span> – remove um comentário.
+    </li>
+    <li>
+      <span class="method">GET</span> <span class="endpoint">/api/comments/task/:taskId</span> – lista comentários de uma tarefa específica.
+    </li>
+  </ul>
+
+  <h2>Exemplos de uso via <em>curl</em></h2>
+  <pre>
+# Criar um novo usuário
+curl -X POST http://localhost:3000/api/users \
+     -H "Content-Type: application/json" \
+     -d '{"name":"Maria Santos","email":"maria@exemplo.com","password":"senha123"}'
+
+# Criar um projeto
+curl -X POST http://localhost:3000/api/projects \
+     -H "Content-Type: application/json" \
+     -d '{"name":"E-commerce","description":"Loja virtual completa","creatorId":1}'
+
+# Criar uma tarefa
+curl -X POST http://localhost:3000/api/tasks \
+     -H "Content-Type: application/json" \
+     -d '{"title":"Design da homepage","description":"Criar layout da página inicial","projectId":1,"userId":2}'
+
+# Marcar tarefa como concluída
+curl -X PUT http://localhost:3000/api/tasks/1/complete \
+     -H "Content-Type: application/json"
+
+# Listar tarefas de um projeto
+curl http://localhost:3000/api/tasks/project/1
+
+# Criar comentário em uma tarefa
+curl -X POST http://localhost:3000/api/comments \
+     -H "Content-Type: application/json" \
+     -d '{"content":"Ótimo trabalho na implementação!","taskId":1,"userId":1}'
+
+# Listar comentários de uma tarefa
+curl http://localhost:3000/api/comments/task/1
+  </pre>
+
+  <h2>Estrutura da Aplicação</h2>
+  <p>O sistema permite:</p>
+  <ul>
+    <li><strong>Gerenciar usuários</strong> - criar, listar, atualizar e remover usuários</li>
+    <li><strong>Organizar projetos</strong> - cada projeto pode ter múltiplas tarefas e um criador</li>
+    <li><strong>Controlar tarefas</strong> - atribuir tarefas a usuários, marcar como concluída/pendente</li>
+    <li><strong>Sistema de comentários</strong> - adicionar feedback e discussões nas tarefas</li>
+  </ul>
+
+  <p class="description">
+    <em>Certifique-se de que o servidor esteja rodando na porta 3000 (ou ajuste a URL nos exemplos conforme necessário).</em>
+  </p>
+</body>
+</html>
