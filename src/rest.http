@@ -1,37 +1,194 @@
-# Teste da rota GET /users
-GET http://localhost:3000/users
+# ===== USERS =====
+
+### Listar todos os usuários
+GET http://localhost:3000/api/users
 Accept: application/json
 
 ###
-
-# Teste da rota GET /users/:id
-GET http://localhost:3000/users/39602f41-b43e-4fa8-b7f7-34c7a516740b
+### Buscar um usuário específico
+GET http://localhost:3000/api/users/1
 Accept: application/json
 
 ###
-
-# Teste da rota POST /users
-POST http://localhost:3000/users
+### Criar um novo usuário
+POST http://localhost:3000/api/users
 Content-Type: application/json
 
 {
-  "name": "John Doe",
-  "email": "john@example.com"
+  "full_name": "João Silva",
+  "password_hash": "hashed_password_123",
+  "email": "joao.silva@empresa.com",
+  "is_active": true
 }
 
 ###
-
-# Teste da rota PUT /users/:id
-PUT http://localhost:3000/users/39602f41-b43e-4fa8-b7f7-34c7a516740b
+### Atualizar um usuário
+PUT http://localhost:3000/api/users/1
 Content-Type: application/json
 
 {
-  "name": "Jane Doe",
-  "email": "jane@example.com"
+  "full_name": "João Silva Atualizado",
+  "password_hash": "hashed_password_456",
+  "email": "joao.silva@empresa.com",
+  "is_active": false
 }
 
 ###
+### Remover um usuário
+DELETE http://localhost:3000/api/users/1
+Accept: application/json
 
-# Teste da rota DELETE /users/:id
-DELETE http://localhost:3000/users/39602f41-b43e-4fa8-b7f7-34c7a516740b
+# ===== PROJECTS =====
+
+### Listar todos os projetos
+GET http://localhost:3000/api/projects
+Accept: application/json
+
+###
+### Buscar um projeto específico
+GET http://localhost:3000/api/projects/1
+Accept: application/json
+
+###
+### Criar um novo projeto
+POST http://localhost:3000/api/projects
+Content-Type: application/json
+
+{
+  "nome": "Novo Projeto",
+  "descricao": "Descrição do projeto",
+  "status": "pendente",
+  "ativo": true,
+  "criador_id": 1
+}
+
+###
+### Atualizar um projeto
+PUT http://localhost:3000/api/projects/1
+Content-Type: application/json
+
+{
+  "nome": "Projeto Atualizado",
+  "descricao": "Descrição atualizada do projeto",
+  "status": "ativo",
+  "ativo": true
+}
+
+###
+### Remover um projeto
+DELETE http://localhost:3000/api/projects/1
+Accept: application/json
+
+###
+### Listar projetos de um usuário
+GET http://localhost:3000/api/projects/users/1
+Accept: application/json
+
+# ===== TASKS =====
+
+### Listar todas as tarefas
+GET http://localhost:3000/api/tasks
+Accept: application/json
+
+###
+### Buscar uma tarefa específica
+GET http://localhost:3000/api/tasks/1
+Accept: application/json
+
+###
+### Criar uma nova tarefa
+POST http://localhost:3000/api/tasks
+Content-Type: application/json
+
+{
+  "nome": "Nova Tarefa",
+  "descricao": "Descrição da tarefa",
+  "status": "pendente",
+  "prioridade": "alta",
+  "prazo": "2025-06-01",
+  "horario": "14:00:00",
+  "projeto_id": 1,
+  "responsavel_id": 1
+}
+
+###
+### Atualizar uma tarefa
+PUT http://localhost:3000/api/tasks/1
+Content-Type: application/json
+
+{
+  "nome": "Tarefa Atualizada",
+  "descricao": "Descrição atualizada da tarefa",
+  "status": "em andamento",
+  "prioridade": "normal",
+  "prazo": "2025-06-05",
+  "horario": "16:00:00",
+  "projeto_id": 1,
+  "responsavel_id": 1
+}
+
+###
+### Marcar tarefa como concluída
+PUT http://localhost:3000/api/tasks/1/complete
+Accept: application/json
+
+###
+### Marcar tarefa como não concluída
+PUT http://localhost:3000/api/tasks/1/incomplete
+Accept: application/json
+
+###
+### Remover uma tarefa
+DELETE http://localhost:3000/api/tasks/1
+Accept: application/json
+
+###
+### Listar tarefas de um usuário
+GET http://localhost:3000/api/tasks/users/1
+Accept: application/json
+
+###
+### Listar tarefas de um projeto
+GET http://localhost:3000/api/tasks/project/1
+Accept: application/json
+
+# ===== COMMENTS =====
+
+### Listar todos os comentários
+GET http://localhost:3000/api/comments
+Accept: application/json
+
+###
+### Buscar um comentário específico
+GET http://localhost:3000/api/comments/1
+Accept: application/json
+
+###
+### Criar um novo comentário
+POST http://localhost:3000/api/comments
+Content-Type: application/json
+
+{
+  "conteudo": "Este é um comentário.",
+  "tarefa_id": 1,
+  "autor_id": 1
+}
+
+###
+### Atualizar um comentário
+PUT http://localhost:3000/api/comments/1
+Content-Type: application/json
+
+{
+  "conteudo": "Comentário atualizado."
+}
+
+###
+### Remover um comentário
+DELETE http://localhost:3000/api/comments/1
+Accept: application/json
+
+###
+### Listar comentários de uma tarefa
+GET http://localhost:3000/api/comments/task/1
 Accept: application/json
