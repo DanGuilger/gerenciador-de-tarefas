@@ -404,7 +404,7 @@
                         <label>Comentário:</label>
                         <textarea id="comment-content" placeholder="Digite seu comentário" rows="4"></textarea>
                     </div>
-                    <button class="btn" onclick="createComment()">Criar Comentário</button>
+                    <button class="btn" onclick="submitComment()">Criar Comentário</button>
                 </div>
 
                 <div id="comments-list">
@@ -778,7 +778,7 @@
             }
         }
 
-        async function createComment() {
+        async function submitComment() {
             const content = document.getElementById('comment-content').value;
             const taskId = document.getElementById('comment-task').value;
             const authorId = document.getElementById('comment-author').value;
