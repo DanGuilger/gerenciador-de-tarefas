@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Projeto - Gerenciador de Tarefas</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #1A1A1A;
+            color: #FFFFFF;
+            min-height: 100vh;
+        }
+
+        header {
+            background: #2D2D2D;
+            padding: 20px 0;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 3px solid transparent;
+            background-image: 
+                linear-gradient(#2D2D2D, #2D2D2D),
+                linear-gradient(90deg, #FF006E, #00C9FF, #FFD600, #00FF88);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 36px;
+            letter-spacing: 2px;
+            background: linear-gradient(45deg, #FF006E, #00C9FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        nav a {
+            color: #FFFFFF;
+            text-decoration: none;
+            margin-left: 30px;
+            font-weight: 600;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: #00C9FF;
+        }
+
+        nav a.active {
+            color: #00C9FF;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .breadcrumb {
+            margin-bottom: 30px;
+            color: #666;
+        }
+
+        .breadcrumb a {
+            color: #00C9FF;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumb a:hover {
+            color: #FF006E;
+        }
+
+        h1 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 48px;
+            letter-spacing: 3px;
+            margin-bottom: 40px;
+            background: linear-gradient(45deg, #FFD600, #FF006E, #00C9FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .form-container {
+            background: #2D2D2D;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 
+                0 0 40px rgba(255, 214, 0, 0.3),
+                0 0 80px rgba(255, 0, 110, 0.2);
+            border: 3px solid transparent;
+            background-image: 
+                linear-gradient(#2D2D2D, #2D2D2D),
+                linear-gradient(45deg, #FFD600, #FF006E, #00C9FF, #00FF88);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #FFFFFF;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #444;
+            border-radius: 10px;
+            font-size: 16px;
+            background-color: #1A1A1A;
+            color: #FFFFFF;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #FF006E;
+            box-shadow: 
+                0 0 0 3px rgba(255, 0, 110, 0.2),
+                inset 0 0 10px rgba(255, 0, 110, 0.1);
+            transform: translateY(-2px);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        .char-count {
+            text-align: right;
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        button {
+            flex: 1;
+            padding: 18px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button[type="submit"] {
+            background: linear-gradient(45deg, #FFD600, #FF006E);
+            color: #FFFFFF;
+        }
+
+        button[type="submit"]:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 10px 30px rgba(255, 214, 0, 0.4),
+                0 5px 15px rgba(255, 0, 110, 0.3);
+        }
+
+        button[type="button"] {
+            background: transparent;
+            color: #00C9FF;
+            border: 2px solid #00C9FF;
+        }
+
+        button[type="button"]:hover {
+            background: rgba(0, 201, 255, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 201, 255, 0.3);
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        button:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .erro {
+            background: linear-gradient(135deg, rgba(255, 56, 56, 0.2), rgba(255, 56, 56, 0.1));
+            border: 2px solid #FF3838;
+            color: #FF3838;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255, 214, 0, 0.02) 35px, rgba(255, 214, 0, 0.02) 70px),
+                repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(255, 0, 110, 0.02) 35px, rgba(255, 0, 110, 0.02) 70px);
+            z-index: -1;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-container {
+            animation: slideIn 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">Task Manager</div>
+            <nav>
+                <a href="/dashboard">Dashboard</a>
+                <a href="/projects" class="active">Projetos</a>
+                <a href="/logout">Sair</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/projects">Projetos</a> / <a href="/projects/<%= project.id %>"><%= project.nome %></a> / Editar
+        </div>
+
+        <h1>Editar Projeto</h1>
+        
+        <div class="form-container">
+            <% if (typeof erro !== 'undefined') { %>
+                <div class="erro"><%= erro %></div>
+            <% } %>
+            
+            <form action="/projects/<%= project.id %>" method="POST">
+                <input type="hidden" name="_method" value="PUT">
+                
+                <div class="form-group">
+                    <label for="nome">Nome do Projeto</label>
+                    <input 
+                        type="text" 
+                        id="nome" 
+                        name="nome" 
+                        value="<%= project.nome %>"
+                        required 
+                        minlength="3"
+                        maxlength="100"
+                    >
+                    <div class="char-count">
+                        <span id="nome-count"><%= project.nome.length %></span>/100
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="descricao">Descrição</label>
+                    <textarea 
+                        id="descricao" 
+                        name="descricao"
+                        minlength="5"
+                        maxlength="500"
+                    ><%= project.descricao || '' %></textarea>
+                    <div class="char-count">
+                        <span id="desc-count"><%= (project.descricao || '').length %></span>/500
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status" name="status" required>
+                        <option value="pendente" <%= project.status === 'pendente' ? 'selected' : '' %>>Pendente</option>
+                        <option value="em progresso" <%= project.status === 'em progresso' ? 'selected' : '' %>>Em Progresso</option>
+                        <option value="concluído" <%= project.status === 'concluído' ? 'selected' : '' %>>Concluído</option>
+                    </select>
+                </div>
+
+                <div class="form-buttons">
+                    <button type="submit">Salvar Alterações</button>
+                    <button type="button" onclick="window.location.href='/projects/<%= project.id %>'">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const nomeInput = document.getElementById('nome');
+        const nomeCount = document.getElementById('nome-count');
+        const descInput = document.getElementById('descricao');
+        const descCount = document.getElementById('desc-count');
+
+        nomeInput.addEventListener('input', function() {
+            nomeCount.textContent = this.value.length;
+        });
+
+        descInput.addEventListener('input', function() {
+            descCount.textContent = this.value.length;
+        });
+    </script>
+</body>
+</html>
