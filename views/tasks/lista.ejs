@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarefas - Gerenciador de Tarefas</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #1A1A1A;
+            color: #FFFFFF;
+            min-height: 100vh;
+        }
+
+        header {
+            background: #2D2D2D;
+            padding: 20px 0;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 3px solid transparent;
+            background-image: 
+                linear-gradient(#2D2D2D, #2D2D2D),
+                linear-gradient(90deg, #FF006E, #00C9FF, #FFD600, #00FF88);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 36px;
+            letter-spacing: 2px;
+            background: linear-gradient(45deg, #FF006E, #00C9FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        nav a {
+            color: #FFFFFF;
+            text-decoration: none;
+            margin-left: 30px;
+            font-weight: 600;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: #00C9FF;
+        }
+
+        nav a.active {
+            color: #00C9FF;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .breadcrumb {
+            margin-bottom: 30px;
+            color: #666;
+        }
+
+        .breadcrumb a {
+            color: #00C9FF;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumb a:hover {
+            color: #FF006E;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        h1 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 48px;
+            letter-spacing: 3px;
+            background: linear-gradient(45deg, #00C9FF, #00FF88, #FFD600);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+        }
+
+        .btn-new {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #00FF88, #00C9FF);
+            color: #1A1A1A;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-new:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.4);
+        }
+
+        .btn-new::before {
+            content: '+';
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .filters {
+            background: #2D2D2D;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .filter-group label {
+            color: #999;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .filter-group select {
+            padding: 8px 15px;
+            background: #1A1A1A;
+            border: 2px solid #444;
+            border-radius: 8px;
+            color: #FFFFFF;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-group select:focus {
+            outline: none;
+            border-color: #00C9FF;
+        }
+
+        .tasks-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .task-item {
+            background: #2D2D2D;
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            gap: 20px;
+            align-items: start;
+            border-left: 5px solid transparent;
+        }
+
+        .task-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .task-item.alta {
+            border-left-color: #FF3838;
+        }
+
+        .task-item.media {
+            border-left-color: #FFD600;
+        }
+
+        .task-item.baixa {
+            border-left-color: #00FF88;
+        }
+
+        .task-item.normal {
+            border-left-color: #00C9FF;
+        }
+
+        .task-content {
+            flex: 1;
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 10px;
+            gap: 15px;
+        }
+
+        .task-title {
+            font-weight: 700;
+            font-size: 20px;
+            color: #FFFFFF;
+        }
+
+        .task-badges {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .task-priority {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .task-priority.alta {
+            background: rgba(255, 56, 56, 0.2);
+            color: #FF3838;
+            border: 1px solid #FF3838;
+        }
+
+        .task-priority.media {
+            background: rgba(255, 214, 0, 0.2);
+            color: #FFD600;
+            border: 1px solid #FFD600;
+        }
+
+        .task-priority.baixa {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00FF88;
+            border: 1px solid #00FF88;
+        }
+
+        .task-priority.normal {
+            background: rgba(0, 201, 255, 0.2);
+            color: #00C9FF;
+            border: 1px solid #00C9FF;
+        }
+
+        .task-status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .task-status.pendente {
+            background: rgba(255, 214, 0, 0.1);
+            color: #FFD600;
+        }
+
+        .task-status.em-progresso {
+            background: rgba(0, 201, 255, 0.1);
+            color: #00C9FF;
+        }
+
+        .task-status.concluída {
+            background: rgba(0, 255, 136, 0.1);
+            color: #00FF88;
+        }
+
+        .task-description {
+            color: #999;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .task-meta {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .task-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .task-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+            border: 2px solid transparent;
+        }
+
+        .action-btn.view {
+            background: rgba(0, 201, 255, 0.2);
+            color: #00C9FF;
+            border-color: #00C9FF;
+        }
+
+        .action-btn.view:hover {
+            background: #00C9FF;
+            color: #1A1A1A;
+        }
+
+        .action-btn.edit {
+            background: rgba(255, 214, 0, 0.2);
+            color: #FFD600;
+            border-color: #FFD600;
+        }
+
+        .action-btn.edit:hover {
+            background: #FFD600;
+            color: #1A1A1A;
+        }
+
+        .action-btn.delete {
+            background: rgba(255, 0, 110, 0.2);
+            color: #FF006E;
+            border-color: #FF006E;
+        }
+
+        .action-btn.delete:hover {
+            background: #FF006E;
+            color: #FFFFFF;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            background: #2D2D2D;
+            border-radius: 15px;
+            margin: 40px auto;
+            max-width: 600px;
+        }
+
+        .empty-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state h2 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 36px;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #FF006E, #00C9FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .empty-state p {
+            color: #999;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(0, 201, 255, 0.02) 35px, rgba(0, 201, 255, 0.02) 70px),
+                repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(0, 255, 136, 0.02) 35px, rgba(0, 255, 136, 0.02) 70px);
+            z-index: -1;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .task-item {
+            animation: fadeInUp 0.5s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .task-item:nth-child(1) { animation-delay: 0.1s; }
+        .task-item:nth-child(2) { animation-delay: 0.2s; }
+        .task-item:nth-child(3) { animation-delay: 0.3s; }
+        .task-item:nth-child(4) { animation-delay: 0.4s; }
+        .task-item:nth-child(5) { animation-delay: 0.5s; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">Task Manager</div>
+            <nav>
+                <a href="/dashboard">Dashboard</a>
+                <a href="/projects" class="active">Projetos</a>
+                <a href="/logout">Sair</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/projects">Projetos</a> / <a href="/projects/<%= projeto_id %>">Projeto</a> / Tarefas
+        </div>
+
+        <div class="page-header">
+            <h1>Tarefas do Projeto</h1>
+            <a href="/tasks/new?projeto_id=<%= projeto_id %>" class="btn-new">Nova Tarefa</a>
+        </div>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label for="filter-status">Status:</label>
+                <select id="filter-status">
+                    <option value="">Todos</option>
+                    <option value="pendente">Pendente</option>
+                    <option value="em progresso">Em Progresso</option>
+                    <option value="concluída">Concluída</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="filter-priority">Prioridade:</label>
+                <select id="filter-priority">
+                    <option value="">Todas</option>
+                    <option value="alta">Alta</option>
+                    <option value="media">Média</option>
+                    <option value="baixa">Baixa</option>
+                    <option value="normal">Normal</option>
+                </select>
+            </div>
+        </div>
+
+        <% if (tasks && tasks.length > 0) { %>
+            <div class="tasks-list">
+                <% tasks.forEach(task => { %>
+                    <div class="task-item <%= task.prioridade %>" onclick="window.location.href='/tasks/<%= task.id %>'">
+                        <div class="task-content">
+                            <div class="task-header">
+                                <h2 class="task-title"><%= task.nome %></h2>
+                                <div class="task-badges">
+                                    <span class="task-priority <%= task.prioridade %>"><%= task.prioridade %></span>
+                                    <span class="task-status <%= task.status.replace(' ', '-') %>"><%= task.status %></span>
+                                </div>
+                            </div>
+                            <% if (task.descricao) { %>
+                                <p class="task-description"><%= task.descricao %></p>
+                            <% } %>
+                            <div class="task-meta">
+                                <span>👤 <%= task.responsavel_nome %></span>
+                                <% if (task.prazo) { %>
+                                    <span>📅 <%= new Date(task.prazo).toLocaleDateString('pt-BR') %></span>
+                                <% } %>
+                                <% if (task.horario) { %>
+                                    <span>🕐 <%= task.horario %></span>
+                                <% } %>
+                            </div>
+                        </div>
+                        <div class="task-actions">
+                            <a href="/tasks/<%= task.id %>" class="action-btn view" onclick="event.stopPropagation()">Ver</a>
+                            <a href="/tasks/<%= task.id %>/edit" class="action-btn edit" onclick="event.stopPropagation()">Editar</a>
+                            <form action="/tasks/<%= task.id %>" method="POST" style="display: inline;" onsubmit="event.stopPropagation(); return confirm('Tem certeza que deseja deletar esta tarefa?')">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="action-btn delete">Deletar</button>
+                            </form>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        <% } else { %>
+            <div class="empty-state">
+                <div class="empty-icon">📋</div>
+                <h2>Nenhuma tarefa ainda</h2>
+                <p>Comece criando a primeira tarefa deste projeto.</p>
+                <a href="/tasks/new?projeto_id=<%= projeto_id %>" class="btn-new">Criar Primeira Tarefa</a>
+            </div>
+        <% } %>
+    </div>
+
+    <script>
+        const filterStatus = document.getElementById('filter-status');
+        const filterPriority = document.getElementById('filter-priority');
+        const taskItems = document.querySelectorAll('.task-item');
+
+        function filterTasks() {
+            const statusValue = filterStatus.value;
+            const priorityValue = filterPriority.value;
+
+            taskItems.forEach(task => {
+                const taskStatus = task.querySelector('.task-status').textContent.toLowerCase().replace(' ', '-');
+                const taskPriority = task.classList[1];
+
+                const statusMatch = !statusValue || taskStatus === statusValue.replace(' ', '-');
+                const priorityMatch = !priorityValue || taskPriority === priorityValue;
+
+                task.style.display = statusMatch && priorityMatch ? 'flex' : 'none';
+            });
+        }
+
+        filterStatus.addEventListener('change', filterTasks);
+        filterPriority.addEventListener('change', filterTasks);
+    </script>
+</body>
+</html>
