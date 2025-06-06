@@ -9,15 +9,8 @@ class usersService {
     async cadastrar(userData) {
         const { nome_completo, email, senha } = userData;
         
-        const { error } = usersModel.schema.validate({
-            ...userData,
-            senha_hash: senha,
-            id: 1
-        });
-        
-        if (error) {
-            console.error('[usersService] - validação falhou', error.details[0].message);
-            throw new Error(error.details[0].message);
+        if (!senha || senha.length < 8) {
+            throw new Error('A senha deve ter no mínimo 8 caracteres');
         }
 
         const usuarioExistente = await this.repository.buscarPorEmail(email);
@@ -26,6 +19,21 @@ class usersService {
         }
 
         const senha_hash = await bcrypt.hash(senha, 10);
+        
+        const userToValidate = {
+            id: 1,
+            nome_completo,
+            email,
+            senha_hash,
+            ativo: true
+        };
+        
+        const { error } = usersModel.schema.validate(userToValidate);
+        
+        if (error) {
+            console.error('[usersService] - validação falhou', error.details[0].message);
+            throw new Error(error.details[0].message);
+        }
         
         return await this.repository.inserir({
             nome_completo,

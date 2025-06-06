@@ -16,7 +16,7 @@ class tasksController {
             res.status(400).send(err.message);
         }
     }
-
+    
     async listarPorProjeto(req, res) {
         try {
             const tasks = await this.service.listarPorProjeto(req.params.projeto_id);
