@@ -6,7 +6,13 @@ const projectsRepository = require('../repositories/projectsRepository');
 const projectsService = require('../services/projectsService');
 const projectsController = require('../controllers/projectsController');
 
-const controller = new projectsController(new projectsService(new projectsRepository));
+const tasksRepository = require('../repositories/tasksRepository');
+const tasksService = require('../services/tasksService');
+
+const controller = new projectsController(new projectsService(new projectsRepository()));
+
+const tasksServiceInstance = new tasksService(new tasksRepository());
+controller.setTasksService(tasksServiceInstance);
 
 router.get('/projects', requireAuth, controller.listar.bind(controller));
 router.get('/projects/new', requireAuth, controller.formCadastro.bind(controller));
