@@ -1,6 +1,11 @@
 class projectsController {
     constructor(service) {
         this.service = service;
+        this.tasksService = null;
+    }
+
+    setTasksService(tasksService) {
+        this.tasksService = tasksService;
     }
 
     async listar(req, res) {
@@ -31,7 +36,14 @@ class projectsController {
     async detalhes(req, res) {
         try {
             const project = await this.service.buscarPorId(req.params.id);
-            res.render('projects/detalhes', { project });
+            
+            // Buscar as tarefas do projeto
+            let tasks = [];
+            if (this.tasksService) {
+                tasks = await this.tasksService.listarPorProjeto(req.params.id);
+            }
+            
+            res.render('projects/detalhes', { project, tasks });
         } catch (err) {
             console.error('[projectsController] - erro ao buscar projeto', err.message);
             res.status(404).send(err.message);

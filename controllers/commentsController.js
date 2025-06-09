@@ -30,8 +30,13 @@ class commentsController {
 
     async deletar(req, res) {
         try {
+            const comment = await this.service.repository.buscarPorId(req.params.id);
+            if (!comment) {
+                throw new Error('Comentário não encontrado');
+            }
+            
             await this.service.deletar(req.params.id);
-            res.redirect('back');
+            res.redirect(`/tasks/${comment.tarefa_id}`);
         } catch (err) {
             console.error('[commentsController] - erro ao deletar comentário', err.message);
             res.status(400).send(err.message);
