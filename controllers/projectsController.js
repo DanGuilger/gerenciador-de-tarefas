@@ -37,7 +37,6 @@ class projectsController {
         try {
             const project = await this.service.buscarPorId(req.params.id);
             
-            // Buscar as tarefas do projeto
             let tasks = [];
             if (this.tasksService) {
                 tasks = await this.tasksService.listarPorProjeto(req.params.id);
