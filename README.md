@@ -1,132 +1,220 @@
 # Gerenciador de Tarefas
 
-Um sistema web de **gerenciamento de tarefas** desenvolvido em Node.js utilizando a arquitetura MVC (Model-View-Controller) e integrado a um banco de dados PostgreSQL. Este projeto permite cadastrar usuários, organizar projetos e tarefas, fornecendo uma interface web simples com templates EJS e uma API RESTful para as operações principais. O foco é oferecer uma estrutura de código limpa e modular, com separação de responsabilidades em camadas (dados, lógica de negócio e apresentação).
+Sistema web para gerenciamento de projetos e tarefas com funcionalidades de colaboração e comentários, desenvolvido como projeto acadêmico utilizando Node.js, Express e PostgreSQL.
 
-## Descrição do Sistema
+## Descrição
 
-Este gerenciador de tarefas implementa as funcionalidades de cadastro e gerenciamento de usuários, projetos e tarefas. Cada usuário pode se registrar e então criar projetos, nos quais pode adicionar múltiplas tarefas. As tarefas incluem informações como descrição, data de vencimento, horário, prioridade e status de conclusão, permitindo o acompanhamento e organização eficiente do trabalho.
+Aplicação web que permite aos usuários criar e gerenciar projetos, organizar tarefas por prioridade e status, atribuir responsáveis e colaborar através de comentários. O sistema inclui autenticação de usuários, dashboard com visão geral dos projetos e interface moderna e responsiva.
 
-## Estrutura de Pastas e Arquivos
+## Estrutura do Projeto
 
-```plaintext
-.
+```
+GERENCIADOR-DE-TAREFAS/
 ├── assets/
+│   └── dashboard.png
 │   └── diagrama-relacional.png
-├── documentos/
-│   └── WAD.md
-├── src/
-│   ├── config/
-│   │   └── db.js
-│   ├── controllers/
-│   │   └── userController.js
-│   ├── models/
-│   │   └── userModels.js
-│   ├── routes/
-│   │   ├── frontRoutes.js
-│   │   ├── index.js
-│   │   └── userRoutes.js
-│   ├── scripts/
-│   │   ├── init.sql
-│   │   └── runSQLScript.js
-│   ├── services/
-│   │   └── userService.js
-│   ├── tests/
-│   │   ├── userController.test.js
-│   │   ├── userModel.test.js
-│   │   ├── userRoutes.test.js
-│   │   └── userService.test.js
-│   └── views/
-│       ├── components/
-│       │   └── header.ejs
-│       ├── css/
-│       │   └── style.css
-│       ├── layout/
-│       │   └── main.ejs
-│       └── pages/
-├── .env
-├── jest.config.js
-├── package-lock.json
+│   └── landing.png
+│   └── login.png
+├── config/
+│   └── database.js
+├── controllers/
+│   ├── authController.js
+│   ├── commentsController.js
+│   ├── dashboardController.js
+│   ├── projectsController.js
+│   └── tasksController.js
+├── middleware/
+│   └── authMiddleware.js
+├── models/
+│   ├── commentsModel.js
+│   ├── projectsModel.js
+│   ├── tasksModel.js
+│   └── usersModel.js
+├── repositories/
+│   ├── commentsRepository.js
+│   ├── dashboardRepository.js
+│   ├── projectsRepository.js
+│   ├── tasksRepository.js
+│   └── usersRepository.js
+├── routes/
+│   ├── authRoutes.js
+│   ├── commentsRoutes.js
+│   ├── dashboardRoutes.js
+│   ├── projectsRoutes.js
+│   └── tasksRoutes.js
+├── scripts/
+│   ├── init.sql
+│   └── runSQLScript.js
+├── services/
+│   ├── commentsService.js
+│   ├── dashboardService.js
+│   ├── projectsService.js
+│   ├── tasksService.js
+│   └── usersService.js
+├── views/
+│   ├── auth/
+│   │   ├── cadastro.ejs
+│   │   └── login.ejs
+│   ├── comments/
+│   │   └── lista.ejs
+│   ├── dashboard/
+│   │   └── home.ejs
+│   ├── projects/
+│   │   ├── cadastro.ejs
+│   │   ├── detalhes.ejs
+│   │   ├── editar.ejs
+│   │   └── lista.ejs
+│   ├── tasks/
+│   │   ├── cadastro.ejs
+│   │   ├── detalhes.ejs
+│   │   ├── editar.ejs
+│   │   └── lista.ejs
+│   └── index.ejs
+├── .env.exemple
+├── .gitignore
 ├── package.json
-├── rest.http
-├── runMigration.js
-├── server.js
-└── README.md
+├── README.md
+└── server.js
 ```
 
-## Como Executar o Projeto Localmente
+## Como Executar
 
-1. Clone o repositório:
+### Pré-requisitos
+- Node.js
+- PostgreSQL
+- npm
 
-```bash
-git clone https://github.com/danielguilger/gerenciador-de-tarefas.git
+### Instalação
+
+1. **Clone o repositório**
+   ```bash
+   git clone <url-do-repositorio>
+   cd gerenciador-de-tarefas
+   ```
+
+2. **Instale as dependências**
+   ```bash
+   npm install
+   ```
+
+3. **Configure as variáveis de ambiente**
+   ```bash
+   cp .env.exemple .env
+   ```
+   
+   Edite o arquivo `.env` com suas configurações:
+   ```env
+   DB_USER=seu_usuario_postgres
+   DB_HOST=localhost
+   DB_DATABASE=gerenciador_tarefas
+   DB_PORT=5432
+   DB_PASSWORD=sua_senha
+   DB_SSL=false
+   PORT=3000
+   ```
+
+4. **Configure o banco de dados**
+   ```bash
+   # Crie o banco de dados no PostgreSQL
+   createdb gerenciador_tarefas
+   
+   # Execute o script de inicialização
+   psql -d gerenciador_tarefas -f scripts/init.sql
+   ```
+
+5. **Execute a aplicação**
+   ```bash
+   npm start
+   ```
+
+6. **Acesse a aplicação**
+   ```
+   http://localhost:3000
+   ```
+
+## Modelo Físico do Banco de Dados
+
+```sql
+-- USERS
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    nome_completo VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    senha_hash VARCHAR(100) NOT NULL,
+    ativo BOOLEAN DEFAULT TRUE
+);
+
+-- PROJECTS
+CREATE TABLE projects (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    descricao TEXT,
+    status VARCHAR(50) DEFAULT 'pendente',
+    ativo BOOLEAN DEFAULT TRUE,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    criador_id INT REFERENCES users(id) ON DELETE SET NULL
+);
+
+-- TASKS
+CREATE TABLE tasks (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    descricao TEXT,
+    status VARCHAR(50) DEFAULT 'pendente',
+    prioridade VARCHAR(50) DEFAULT 'normal',
+    prazo DATE,
+    horario TIME,
+    projeto_id INT REFERENCES projects(id) ON DELETE CASCADE,
+    responsavel_id INT REFERENCES users(id) ON DELETE SET NULL,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- COMMENTS
+CREATE TABLE comments (
+    id SERIAL PRIMARY KEY,
+    conteudo TEXT NOT NULL,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    tarefa_id INT REFERENCES tasks(id) ON DELETE CASCADE,
+    autor_id INT REFERENCES users(id) ON DELETE SET NULL
+);
 ```
-
-2. Acesse a pasta e instale as dependências:
-
-```bash
-cd gerenciador-de-tarefas
-npm install
-```
-
-3. Configure o arquivo `.env` com as variáveis de conexão:
-
-````env
-DB_USER="seu_usuario"
-DB_HOST="seu_host"
-DB_DATABASE="seu_banco"
-DB_PASSWORD="sua_senha"
-DB_PORT="sua_porta"
-DB_SSL="true"
-PORT=3000
-````
-
-4. Rode o script de criação do banco:
-
-```bash
-node src/scripts/runSQLScript.js
-```
-
-5. Inicie o servidor:
-
-```bash
-npm start
-```
-
-6. Acesse em: `http://localhost:3000`
-
-## Modelo Físico do Banco de Dados (SQL)
-
-O modelo físico do banco encontra-se no arquivo [`src/scripts/init.sql`](./src/scripts/init.sql). Ele contém as instruções SQL para criação das tabelas `users`, `projects`, `tasks` e `comments`, com relacionamentos e constraints necessárias.
 
 ## Diagrama Relacional
 
-Imagem do diagrama relacional disponível em:
-
-```
-assets/diagrama-relacional.png
-```
+![Diagrama Relacional](assets/diagrama-relacional.png)
 
 ## Tecnologias Utilizadas
 
-* Node.js
-* Express.js
-* PostgreSQL
-* EJS
-* Jest
-* dotenv
+- **Backend:** Node.js, Express.js
+- **Banco de Dados:** PostgreSQL
+- **Template Engine:** EJS
+- **Autenticação:** bcrypt, express-session
+- **Validação:** Joi
+- **Outros:** method-override, dotenv, pg
+
+## Desenvolvimento
+
+```bash
+# Instalar dependências de desenvolvimento
+npm install
+
+# Executar com nodemon (desenvolvimento)
+npm run dev
+```
 
 ## Testes
-
-Para rodar os testes:
 
 ```bash
 npm test
 ```
-
 ## Licença
 
 Este projeto está licenciado sob a licença MIT.
 
 ## Autor
 
-Daniel Guilger
+Daniel Polakiewicz Guilger
+
+---
+
+**Projeto Acadêmico** - Sistema desenvolvido para fins educacionais

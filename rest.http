@@ -1,0 +1,286 @@
+### ========================================
+### GERENCIADOR DE TAREFAS - REST CLIENT
+### ========================================
+
+@baseUrl = http://localhost:3000
+@contentType = application/x-www-form-urlencoded
+
+### ========================================
+### VARIÁVEIS DE TESTE
+### ========================================
+
+@testEmail = teste@email.com
+@testPassword = senha123456
+@testProjectId = 1
+@testTaskId = 1
+@testCommentId = 1
+@testUserId = 1
+
+### ========================================
+### 1. AUTENTICAÇÃO
+### ========================================
+
+### 1.1 - Página de Login (GET)
+GET {{baseUrl}}/login
+Accept: text/html
+
+### 1.2 - Realizar Login (POST)
+POST {{baseUrl}}/login
+Content-Type: {{contentType}}
+
+email={{testEmail}}&senha={{testPassword}}
+
+### 1.3 - Página de Cadastro (GET)
+GET {{baseUrl}}/cadastro
+Accept: text/html
+
+### 1.4 - Criar Conta (POST)
+POST {{baseUrl}}/cadastro
+Content-Type: {{contentType}}
+
+nome_completo=Usuario Teste&email=novo@teste.com&senha=senha123456
+
+### 1.5 - Logout (GET)
+GET {{baseUrl}}/logout
+
+### ========================================
+### 2. DASHBOARD
+### ========================================
+
+### 2.1 - Acessar Dashboard (GET)
+GET {{baseUrl}}/dashboard
+Accept: text/html
+
+### 2.2 - Página Inicial (GET)
+GET {{baseUrl}}/
+Accept: text/html
+
+### ========================================
+### 3. PROJETOS (PROJECTS)
+### ========================================
+
+### 3.1 - Listar Projetos (GET)
+GET {{baseUrl}}/projects
+Accept: text/html
+
+### 3.2 - Formulário de Novo Projeto (GET)
+GET {{baseUrl}}/projects/new
+Accept: text/html
+
+### 3.3 - Criar Projeto (POST)
+POST {{baseUrl}}/projects
+Content-Type: {{contentType}}
+
+nome=Projeto Teste API&descricao=Projeto criado via REST Client&status=pendente
+
+### 3.4 - Detalhes do Projeto (GET)
+GET {{baseUrl}}/projects/{{testProjectId}}
+Accept: text/html
+
+### 3.5 - Formulário de Edição do Projeto (GET)
+GET {{baseUrl}}/projects/{{testProjectId}}/edit
+Accept: text/html
+
+### 3.6 - Atualizar Projeto (PUT)
+PUT {{baseUrl}}/projects/{{testProjectId}}
+Content-Type: {{contentType}}
+
+nome=Projeto Atualizado API&descricao=Projeto atualizado via REST Client&status=em progresso
+
+### 3.7 - Deletar Projeto (DELETE)
+DELETE {{baseUrl}}/projects/{{testProjectId}}
+Content-Type: {{contentType}}
+
+### ========================================
+### 4. TAREFAS (TASKS)
+### ========================================
+
+### 4.1 - Listar Tarefas por Projeto (GET)
+GET {{baseUrl}}/projects/{{testProjectId}}/tasks
+Accept: text/html
+
+### 4.2 - Formulário de Nova Tarefa (GET)
+GET {{baseUrl}}/tasks/new?projeto_id={{testProjectId}}
+Accept: text/html
+
+### 4.3 - Criar Tarefa (POST)
+POST {{baseUrl}}/tasks
+Content-Type: {{contentType}}
+
+nome=Tarefa Teste API&descricao=Tarefa criada via REST Client&status=pendente&prioridade=alta&projeto_id={{testProjectId}}&responsavel_id={{testUserId}}&prazo=2024-12-31&horario=14:30
+
+### 4.4 - Detalhes da Tarefa (GET)
+GET {{baseUrl}}/tasks/{{testTaskId}}
+Accept: text/html
+
+### 4.5 - Formulário de Edição da Tarefa (GET)
+GET {{baseUrl}}/tasks/{{testTaskId}}/edit
+Accept: text/html
+
+### 4.6 - Atualizar Tarefa (PUT)
+PUT {{baseUrl}}/tasks/{{testTaskId}}
+Content-Type: {{contentType}}
+
+nome=Tarefa Atualizada API&descricao=Tarefa atualizada via REST Client&status=em progresso&prioridade=média&responsavel_id={{testUserId}}&prazo=2024-12-25&horario=16:00
+
+### 4.7 - Deletar Tarefa (DELETE)
+DELETE {{baseUrl}}/tasks/{{testTaskId}}
+Content-Type: {{contentType}}
+
+### ========================================
+### 5. COMENTÁRIOS (COMMENTS)
+### ========================================
+
+### 5.1 - Listar Comentários da Tarefa (GET)
+GET {{baseUrl}}/tasks/{{testTaskId}}/comments
+Accept: text/html
+
+### 5.2 - Criar Comentário (POST)
+POST {{baseUrl}}/tasks/{{testTaskId}}/comments
+Content-Type: {{contentType}}
+
+conteudo=Este é um comentário de teste criado via REST Client. Testando a funcionalidade de comentários.
+
+### 5.3 - Deletar Comentário (DELETE)
+DELETE {{baseUrl}}/comments/{{testCommentId}}
+Content-Type: {{contentType}}
+
+### ========================================
+### 6. TESTES DE VALIDAÇÃO
+### ========================================
+
+### 6.1 - Criar Projeto com Dados Inválidos
+POST {{baseUrl}}/projects
+Content-Type: {{contentType}}
+
+nome=AB&descricao=&status=invalido
+
+### 6.2 - Criar Tarefa com Dados Inválidos
+POST {{baseUrl}}/tasks
+Content-Type: {{contentType}}
+
+nome=AB&descricao=&status=invalido&prioridade=invalida&projeto_id=999&responsavel_id=999
+
+### 6.3 - Criar Usuário com Email Duplicado
+POST {{baseUrl}}/cadastro
+Content-Type: {{contentType}}
+
+nome_completo=Usuario Duplicado&email={{testEmail}}&senha=senha123
+
+### 6.4 - Login com Credenciais Inválidas
+POST {{baseUrl}}/login
+Content-Type: {{contentType}}
+
+email=inexistente@teste.com&senha=senhaerrada
+
+### ========================================
+### 7. TESTES DE SEGURANÇA (SEM AUTENTICAÇÃO)
+### ========================================
+
+### 7.1 - Tentar Acessar Dashboard sem Login
+GET {{baseUrl}}/dashboard
+Accept: text/html
+
+### 7.2 - Tentar Criar Projeto sem Login
+POST {{baseUrl}}/projects
+Content-Type: {{contentType}}
+
+nome=Projeto Sem Auth&descricao=Teste sem autenticação
+
+### 7.3 - Tentar Listar Projetos sem Login
+GET {{baseUrl}}/projects
+Accept: text/html
+
+### ========================================
+### 8. TESTES DE FLUXO COMPLETO
+### ========================================
+
+### 8.1 - Fluxo Completo: Login → Projeto → Tarefa → Comentário
+
+# Passo 1: Login
+POST {{baseUrl}}/login
+Content-Type: {{contentType}}
+
+email={{testEmail}}&senha={{testPassword}}
+
+###
+
+# Passo 2: Criar Projeto
+POST {{baseUrl}}/projects
+Content-Type: {{contentType}}
+
+nome=Projeto Fluxo Completo&descricao=Projeto para teste de fluxo completo&status=pendente
+
+###
+
+# Passo 3: Criar Tarefa no Projeto
+POST {{baseUrl}}/tasks
+Content-Type: {{contentType}}
+
+nome=Tarefa Fluxo Completo&descricao=Tarefa para teste de fluxo&status=pendente&prioridade=normal&projeto_id=1&responsavel_id=1&prazo=2024-12-31
+
+###
+
+# Passo 4: Adicionar Comentário na Tarefa
+POST {{baseUrl}}/tasks/1/comments
+Content-Type: {{contentType}}
+
+conteudo=Comentário do fluxo completo de teste da aplicação.
+
+###
+
+# Passo 5: Atualizar Status da Tarefa
+PUT {{baseUrl}}/tasks/1
+Content-Type: {{contentType}}
+
+nome=Tarefa Fluxo Completo&descricao=Tarefa para teste de fluxo&status=concluída&prioridade=normal&responsavel_id=1&prazo=2024-12-31
+
+### ========================================
+### 9. TESTES DE PERFORMANCE/STRESS
+### ========================================
+
+### 9.1 - Múltiplas Criações de Projetos
+POST {{baseUrl}}/projects
+Content-Type: {{contentType}}
+
+nome=Projeto Teste 1&descricao=Primeiro projeto de teste em lote
+
+###
+
+POST {{baseUrl}}/projects
+Content-Type: {{contentType}}
+
+nome=Projeto Teste 2&descricao=Segundo projeto de teste em lote
+
+###
+
+POST {{baseUrl}}/projects
+Content-Type: {{contentType}}
+
+nome=Projeto Teste 3&descricao=Terceiro projeto de teste em lote
+
+### ========================================
+### 10. TESTES DE BORDA
+### ========================================
+
+### 10.1 - Projeto com Descrição Muito Longa
+POST {{baseUrl}}/projects
+Content-Type: {{contentType}}
+
+nome=Projeto Descrição Longa&descricao=Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.
+
+### 10.2 - Comentário com Conteúdo no Limite
+POST {{baseUrl}}/tasks/1/comments
+Content-Type: {{contentType}}
+
+conteudo=Este é um comentário que testa o limite máximo de caracteres permitidos pelo sistema. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.
+
+### ========================================
+### NOTAS DE USO
+### ========================================
+
+# 1. Certifique-se de que o servidor está rodando em localhost:3000
+# 2. Alguns testes requerem autenticação prévia
+# 3. Ajuste os IDs de teste conforme necessário
+# 4. Para testes de sessão, execute o login primeiro
+# 5. Use Ctrl+Shift+P > "Rest Client: Send Request" no VS Code
