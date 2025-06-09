@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Gerenciador de Tarefas</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #1A1A1A;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255, 0, 110, 0.05) 35px, rgba(255, 0, 110, 0.05) 70px),
+                repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(0, 201, 255, 0.05) 35px, rgba(0, 201, 255, 0.05) 70px);
+            z-index: 1;
+        }
+
+        .login-container {
+            background: #2D2D2D;
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 
+                0 0 40px rgba(255, 0, 110, 0.3),
+                0 0 80px rgba(0, 201, 255, 0.2);
+            width: 100%;
+            max-width: 450px;
+            position: relative;
+            z-index: 2;
+            border: 3px solid transparent;
+            background-image: 
+                linear-gradient(#2D2D2D, #2D2D2D),
+                linear-gradient(45deg, #FF006E, #00C9FF, #FFD600, #00FF88);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+        }
+
+        h1 {
+            font-family: 'Bebas Neue', cursive;
+            text-align: center;
+            font-size: 48px;
+            letter-spacing: 3px;
+            margin-bottom: 40px;
+            background: linear-gradient(45deg, #FF006E, #00C9FF, #FFD600);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #FFFFFF;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #444;
+            border-radius: 10px;
+            font-size: 16px;
+            background-color: #1A1A1A;
+            color: #FFFFFF;
+            transition: all 0.3s ease;
+        }
+
+        input::placeholder {
+            color: #666;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #00C9FF;
+            box-shadow: 
+                0 0 0 3px rgba(0, 201, 255, 0.2),
+                inset 0 0 10px rgba(0, 201, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        button {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(45deg, #FF006E, #00C9FF);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 10px 30px rgba(255, 0, 110, 0.4),
+                0 5px 15px rgba(0, 201, 255, 0.3);
+        }
+
+        button:hover::before {
+            width: 350px;
+            height: 350px;
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        .link {
+            text-align: center;
+            margin-top: 30px;
+            color: #999;
+        }
+
+        .link a {
+            color: #00C9FF;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .link a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #FF006E, #00C9FF);
+            transition: width 0.3s ease;
+        }
+
+        .link a:hover {
+            color: #FF006E;
+        }
+
+        .link a:hover::after {
+            width: 100%;
+        }
+
+        .erro {
+            background: linear-gradient(135deg, rgba(255, 56, 56, 0.2), rgba(255, 56, 56, 0.1));
+            border: 2px solid #FF3838;
+            color: #FF3838;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 600;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .login-container {
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Login</h1>
+        
+        <% if (typeof erro !== 'undefined') { %>
+            <div class="erro"><%= erro %></div>
+        <% } %>
+        
+        <form action="/login" method="POST">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    placeholder="seu@email.com"
+                    required 
+                    autofocus
+                >
+            </div>
+            
+            <div class="form-group">
+                <label for="senha">Senha</label>
+                <input 
+                    type="password" 
+                    id="senha" 
+                    name="senha" 
+                    placeholder="••••••••"
+                    required
+                >
+            </div>
+            
+            <button type="submit">Entrar</button>
+        </form>
+        
+        <div class="link">
+            Não tem uma conta? <a href="/cadastro">Cadastre-se</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Gerenciador de Tarefas</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #1A1A1A;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cadastro-container {
+            background: #2D2D2D;
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 
+                0 0 40px rgba(0, 255, 136, 0.3),
+                0 0 80px rgba(255, 214, 0, 0.2);
+            width: 100%;
+            max-width: 450px;
+            position: relative;
+            z-index: 2;
+            border: 3px solid transparent;
+            background-image: 
+                linear-gradient(#2D2D2D, #2D2D2D),
+                linear-gradient(45deg, #00FF88, #FFD600, #FF006E, #00C9FF);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+        }
+
+        h1 {
+            font-family: 'Bebas Neue', cursive;
+            text-align: center;
+            font-size: 48px;
+            letter-spacing: 3px;
+            margin-bottom: 40px;
+            background: linear-gradient(45deg, #00FF88, #FFD600, #FF006E);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #FFFFFF;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #444;
+            border-radius: 10px;
+            font-size: 16px;
+            background-color: #1A1A1A;
+            color: #FFFFFF;
+            transition: all 0.3s ease;
+        }
+
+        input::placeholder {
+            color: #666;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #FFD600;
+            box-shadow: 
+                0 0 0 3px rgba(255, 214, 0, 0.2),
+                inset 0 0 10px rgba(255, 214, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .senha-requisitos {
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            font-size: 12px;
+        }
+
+        .requisito {
+            color: #666;
+            margin: 3px 0;
+            transition: color 0.3s ease;
+        }
+
+        .requisito.valido {
+            color: #00FF88;
+        }
+
+        .requisito::before {
+            content: '○ ';
+            margin-right: 5px;
+        }
+
+        .requisito.valido::before {
+            content: '● ';
+            color: #00FF88;
+        }
+
+        button {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(45deg, #00FF88, #FFD600);
+            color: #1A1A1A;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 10px 30px rgba(0, 255, 136, 0.4),
+                0 5px 15px rgba(255, 214, 0, 0.3);
+        }
+
+        button:hover::before {
+            width: 350px;
+            height: 350px;
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        .link {
+            text-align: center;
+            margin-top: 30px;
+            color: #999;
+        }
+
+        .link a {
+            color: #FFD600;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .link a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #00FF88, #FFD600);
+            transition: width 0.3s ease;
+        }
+
+        .link a:hover {
+            color: #00FF88;
+        }
+
+        .link a:hover::after {
+            width: 100%;
+        }
+
+        .erro {
+            background: linear-gradient(135deg, rgba(255, 56, 56, 0.2), rgba(255, 56, 56, 0.1));
+            border: 2px solid #FF3838;
+            color: #FF3838;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 600;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .cadastro-container {
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="cadastro-container">
+        <h1>Criar Conta</h1>
+        
+        <% if (typeof erro !== 'undefined') { %>
+            <div class="erro"><%= erro %></div>
+        <% } %>
+        
+        <form action="/cadastro" method="POST">
+            <div class="form-group">
+                <label for="nome_completo">Nome Completo</label>
+                <input 
+                    type="text" 
+                    id="nome_completo" 
+                    name="nome_completo" 
+                    placeholder="Seu nome completo"
+                    required 
+                    autofocus
+                    minlength="3"
+                    maxlength="100"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    placeholder="seu@email.com"
+                    required
+                    maxlength="100"
+                >
+            </div>
+            
+            <div class="form-group">
+                <label for="senha">Senha</label>
+                <input 
+                    type="password" 
+                    id="senha" 
+                    name="senha" 
+                    placeholder="••••••••"
+                    required
+                    minlength="8"
+                >
+                <div class="senha-requisitos">
+                    <div class="requisito" id="req-length">Mínimo 8 caracteres</div>
+                </div>
+            </div>
+            
+            <button type="submit">Criar Conta</button>
+        </form>
+        
+        <div class="link">
+            Já tem uma conta? <a href="/login">Fazer login</a>
+        </div>
+    </div>
+
+    <script>
+        const senhaInput = document.getElementById('senha');
+        const reqLength = document.getElementById('req-length');
+
+        senhaInput.addEventListener('input', function() {
+            const senha = this.value;
+            
+            if (senha.length >= 8) {
+                reqLength.classList.add('valido');
+            } else {
+                reqLength.classList.remove('valido');
+            }
+        });
+
+
+    </script>
+</body>
+</html>

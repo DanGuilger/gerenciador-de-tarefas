@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= project.nome %> - Gerenciador de Tarefas</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #1A1A1A;
+            color: #FFFFFF;
+            min-height: 100vh;
+        }
+
+        header {
+            background: #2D2D2D;
+            padding: 20px 0;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 3px solid transparent;
+            background-image: 
+                linear-gradient(#2D2D2D, #2D2D2D),
+                linear-gradient(90deg, #FF006E, #00C9FF, #FFD600, #00FF88);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 36px;
+            letter-spacing: 2px;
+            background: linear-gradient(45deg, #FF006E, #00C9FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        nav a {
+            color: #FFFFFF;
+            text-decoration: none;
+            margin-left: 30px;
+            font-weight: 600;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: #00C9FF;
+        }
+
+        nav a.active {
+            color: #00C9FF;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .breadcrumb {
+            margin-bottom: 30px;
+            color: #666;
+        }
+
+        .breadcrumb a {
+            color: #00C9FF;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumb a:hover {
+            color: #FF006E;
+        }
+
+        .project-header {
+            background: #2D2D2D;
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #FF006E, #00C9FF, #FFD600, #00FF88);
+        }
+
+        .project-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .project-details {
+            flex: 1;
+        }
+
+        h1 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 48px;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #FF006E, #00C9FF, #FFD600);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+        }
+
+        .project-description {
+            color: #CCC;
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+
+        .project-meta {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .meta-label {
+            color: #666;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .project-status {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .project-status.pendente {
+            background: rgba(255, 214, 0, 0.2);
+            color: #FFD600;
+            border: 1px solid #FFD600;
+        }
+
+        .project-status.em-progresso {
+            background: rgba(0, 201, 255, 0.2);
+            color: #00C9FF;
+            border: 1px solid #00C9FF;
+        }
+
+        .project-status.concluído {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00FF88;
+            border: 1px solid #00FF88;
+        }
+
+        .project-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 2px solid transparent;
+            display: inline-block;
+        }
+
+        .btn-edit {
+            background: linear-gradient(45deg, #FFD600, #FFA500);
+            color: #1A1A1A;
+        }
+
+        .btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 214, 0, 0.4);
+        }
+
+        .btn-delete {
+            background: transparent;
+            color: #FF006E;
+            border-color: #FF006E;
+        }
+
+        .btn-delete:hover {
+            background: rgba(255, 0, 110, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .tasks-section {
+            margin-top: 40px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 36px;
+            letter-spacing: 2px;
+            color: #FFFFFF;
+            text-transform: uppercase;
+        }
+
+        .btn-new-task {
+            background: linear-gradient(45deg, #00FF88, #00C9FF);
+            color: #1A1A1A;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-new-task:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
+        }
+
+        .tasks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .task-card {
+            background: #2D2D2D;
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            border-left: 4px solid transparent;
+        }
+
+        .task-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .task-card.alta {
+            border-left-color: #FF3838;
+        }
+
+        .task-card.media {
+            border-left-color: #FFD600;
+        }
+
+        .task-card.baixa {
+            border-left-color: #00FF88;
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .task-name {
+            font-weight: 700;
+            font-size: 18px;
+            color: #FFFFFF;
+            flex: 1;
+        }
+
+        .task-priority {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .task-priority.alta {
+            background: rgba(255, 56, 56, 0.2);
+            color: #FF3838;
+        }
+
+        .task-priority.media {
+            background: rgba(255, 214, 0, 0.2);
+            color: #FFD600;
+        }
+
+        .task-priority.baixa {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00FF88;
+        }
+
+        .task-description {
+            color: #999;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .task-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .task-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .task-status.pendente {
+            background: rgba(255, 214, 0, 0.1);
+            color: #FFD600;
+        }
+
+        .task-status.em-progresso {
+            background: rgba(0, 201, 255, 0.1);
+            color: #00C9FF;
+        }
+
+        .task-status.concluída {
+            background: rgba(0, 255, 136, 0.1);
+            color: #00FF88;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: #2D2D2D;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .empty-state p {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255, 0, 110, 0.02) 35px, rgba(255, 0, 110, 0.02) 70px),
+                repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(0, 201, 255, 0.02) 35px, rgba(0, 201, 255, 0.02) 70px);
+            z-index: -1;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .task-card {
+            animation: fadeInUp 0.5s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .task-card:nth-child(1) { animation-delay: 0.1s; }
+        .task-card:nth-child(2) { animation-delay: 0.2s; }
+        .task-card:nth-child(3) { animation-delay: 0.3s; }
+        .task-card:nth-child(4) { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">Task Manager</div>
+            <nav>
+                <a href="/dashboard">Dashboard</a>
+                <a href="/projects" class="active">Projetos</a>
+                <a href="/logout">Sair</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/projects">Projetos</a> / <%= project.nome %>
+        </div>
+
+        <div class="project-header">
+            <div class="project-info">
+                <div class="project-details">
+                    <h1><%= project.nome %></h1>
+                    <% if (project.descricao) { %>
+                        <p class="project-description"><%= project.descricao %></p>
+                    <% } %>
+                    <div class="project-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">Status:</span>
+                            <span class="project-status <%= project.status.replace(' ', '-') %>">
+                                <%= project.status %>
+                            </span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Criado em:</span>
+                            <span><%= new Date(project.criado_em).toLocaleDateString('pt-BR') %></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-actions">
+                    <a href="/projects/<%= project.id %>/edit" class="btn btn-edit">Editar</a>
+                    <form action="/projects/<%= project.id %>" method="POST" style="display: inline;" onsubmit="return confirm('Tem certeza que deseja deletar este projeto?')">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit" class="btn btn-delete">Deletar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="tasks-section">
+            <div class="section-header">
+                <h2 class="section-title">Tarefas</h2>
+                <a href="/tasks/new?projeto_id=<%= project.id %>" class="btn-new-task">+ Nova Tarefa</a>
+            </div>
+
+            <% if (tasks && tasks.length > 0) { %>
+                <div class="tasks-grid">
+                    <% tasks.forEach(task => { %>
+                        <div class="task-card <%= task.prioridade %>" onclick="window.location.href='/tasks/<%= task.id %>'">
+                            <div class="task-header">
+                                <h3 class="task-name"><%= task.nome %></h3>
+                                <span class="task-priority <%= task.prioridade %>"><%= task.prioridade %></span>
+                            </div>
+                            <% if (task.descricao) { %>
+                                <p class="task-description"><%= task.descricao %></p>
+                            <% } %>
+                            <div class="task-footer">
+                                <span class="task-status <%= task.status.replace(' ', '-') %>"><%= task.status %></span>
+                                <% if (task.prazo) { %>
+                                    <span>📅 <%= new Date(task.prazo).toLocaleDateString('pt-BR') %></span>
+                                <% } %>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } else { %>
+                <div class="empty-state">
+                    <p>Nenhuma tarefa neste projeto ainda.</p>
+                    <a href="/tasks/new?projeto_id=<%= project.id %>" class="btn-new-task">Criar Primeira Tarefa</a>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</body>
+</html>
