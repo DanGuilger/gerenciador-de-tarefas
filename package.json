@@ -17,7 +17,8 @@
     "express": "^5.1.0",
     "express-session": "^1.18.1",
     "joi": "^17.13.3",
-    "pg": "^8.15.6"
+    "method-override": "^3.0.0",
+    "pg": "^8.16.0"
   },
   "devDependencies": {
     "jest": "^29.7.0",
