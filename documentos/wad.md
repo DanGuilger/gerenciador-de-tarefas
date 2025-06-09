@@ -43,15 +43,15 @@ O **Gerenciador de Tarefas** é um sistema web completo desenvolvido para gerenc
 ### 3. Interface da Aplicação
 
 #### 3.1 Página de Login
-![Login](assets/login.png)
+![Login](../assets/login.png)
 *Tela de autenticação com campos para email e senha*
 
 #### 3.2 Landing Page
-![Landing](assets/landing.png)
+![Landing](../assets/landing.png)
 *Página inicial apresentando a aplicação e suas funcionalidades*
 
 #### 3.3 Dashboard Principal
-![Dashboard](assets/dashboard.png)
+![Dashboard](../assets/dashboard.png)
 *Painel principal com visão geral dos projetos e estatísticas do usuário*
 
 ### 4. Arquitetura Técnica
@@ -62,22 +62,204 @@ A aplicação segue rigorosamente o padrão Model-View-Controller:
 - **Views:** Templates EJS para renderização das páginas
 - **Controllers:** Processam requisições e coordenam Model e View
 
-#### 4.2 Estrutura de Camadas
+#### 4.2 Diagrama Arquitetural MVC
+
+```mermaid
+graph TB
+    %% Camada de Apresentação (View)
+    subgraph "VIEW LAYER"
+        V1["`**Landing Page**
+        index.ejs`"]
+        V2["`**Authentication**
+        login.ejs
+        cadastro.ejs`"]
+        V3["`**Dashboard**
+        home.ejs`"]
+        V4["`**Projects**
+        lista.ejs
+        detalhes.ejs
+        cadastro.ejs
+        editar.ejs`"]
+        V5["`**Tasks**
+        lista.ejs
+        detalhes.ejs
+        cadastro.ejs
+        editar.ejs`"]
+        V6["`**Comments**
+        lista.ejs`"]
+    end
+
+    %% Camada de Controle (Controller)
+    subgraph "CONTROLLER LAYER"
+        C1["`**authController**
+        - formLogin()
+        - login()
+        - formCadastro()
+        - cadastrar()
+        - logout()`"]
+        C2["`**dashboardController**
+        - home()`"]
+        C3["`**projectsController**
+        - listar()
+        - detalhes()
+        - cadastrar()
+        - atualizar()
+        - deletar()`"]
+        C4["`**tasksController**
+        - listarPorProjeto()
+        - detalhes()
+        - cadastrar()
+        - atualizar()
+        - deletar()`"]
+        C5["`**commentsController**
+        - listarPorTarefa()
+        - cadastrar()
+        - deletar()`"]
+    end
+
+    %% Camada de Serviço (Business Logic)
+    subgraph "SERVICE LAYER"
+        S1["`**usersService**
+        - autenticar()
+        - criarUsuario()
+        - validarDados()`"]
+        S2["`**dashboardService**
+        - obterEstatisticas()
+        - resumoProjetos()`"]
+        S3["`**projectsService**
+        - criarProjeto()
+        - atualizarProjeto()
+        - validarPermissoes()`"]
+        S4["`**tasksService**
+        - criarTarefa()
+        - atualizarTarefa()
+        - gerenciarStatus()`"]
+        S5["`**commentsService**
+        - adicionarComentario()
+        - validarAutoria()`"]
+    end
+
+    %% Camada de Modelo (Model/Repository)
+    subgraph "MODEL LAYER"
+        M1["`**usersRepository**
+        - buscarPorEmail()
+        - criar()
+        - atualizar()`"]
+        M2["`**dashboardRepository**
+        - obterEstatisticas()
+        - contarProjetos()`"]
+        M3["`**projectsRepository**
+        - listar()
+        - buscarPorId()
+        - criar()
+        - atualizar()
+        - deletar()`"]
+        M4["`**tasksRepository**
+        - listarPorProjeto()
+        - buscarPorId()
+        - criar()
+        - atualizar()
+        - deletar()`"]
+        M5["`**commentsRepository**
+        - listarPorTarefa()
+        - criar()
+        - deletar()`"]
+    end
+
+    %% Banco de Dados
+    subgraph "DATABASE LAYER"
+        DB["`**PostgreSQL**
+        📊 users
+        📊 projects
+        📊 tasks
+        📊 comments`"]
+    end
+
+    %% Roteamento
+    subgraph "ROUTING LAYER"
+        R1["`**authRoutes**
+        /login, /cadastro, /logout`"]
+        R2["`**dashboardRoutes**
+        /dashboard`"]
+        R3["`**projectsRoutes**
+        /projects/*`"]
+        R4["`**tasksRoutes**
+        /tasks/*`"]
+        R5["`**commentsRoutes**
+        /comments/*`"]
+    end
+
+    %% Middleware
+    subgraph "MIDDLEWARE"
+        MW["`**authMiddleware**
+        - requireAuth()
+        - sessionManager()`"]
+    end
+
+    %% Conexões principais do MVC
+    V1 --> C1
+    V2 --> C1
+    V3 --> C2
+    V4 --> C3
+    V5 --> C4
+    V6 --> C5
+
+    C1 --> S1
+    C2 --> S2
+    C3 --> S3
+    C4 --> S4
+    C5 --> S5
+
+    S1 --> M1
+    S2 --> M2
+    S3 --> M3
+    S4 --> M4
+    S5 --> M5
+
+    M1 --> DB
+    M2 --> DB
+    M3 --> DB
+    M4 --> DB
+    M5 --> DB
+
+    %% Roteamento para Controllers
+    R1 --> C1
+    R2 --> C2
+    R3 --> C3
+    R4 --> C4
+    R5 --> C5
+
+    %% Middleware
+    MW --> C2
+    MW --> C3
+    MW --> C4
+    MW --> C5
+
+    %% Estilos
+    classDef viewStyle fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000
+    classDef controllerStyle fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    classDef serviceStyle fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+    classDef modelStyle fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+    classDef dbStyle fill:#ffebee,stroke:#c62828,stroke-width:3px,color:#000
+    classDef routeStyle fill:#f1f8e9,stroke:#33691e,stroke-width:2px,color:#000
+    classDef middlewareStyle fill:#fce4ec,stroke:#880e4f,stroke-width:2px,color:#000
+
+    class V1,V2,V3,V4,V5,V6 viewStyle
+    class C1,C2,C3,C4,C5 controllerStyle
+    class S1,S2,S3,S4,S5 serviceStyle
+    class M1,M2,M3,M4,M5 modelStyle
+    class DB dbStyle
+    class R1,R2,R3,R4,R5 routeStyle
+    class MW middlewareStyle
 ```
-┌─────────────────┐
-│     Views       │ ← Templates EJS
-│    (EJS)        │
-├─────────────────┤
-│   Controllers   │ ← Lógica de controle
-├─────────────────┤
-│    Services     │ ← Regras de negócio
-├─────────────────┤
-│  Repositories   │ ← Acesso a dados
-├─────────────────┤
-│    Database     │ ← PostgreSQL
-│  (PostgreSQL)   │
-└─────────────────┘
-```
+#### 4.3 Estrutura de Camadas
+- **View Layer:** Templates EJS para renderização das interfaces
+- **Controller Layer:** Processamento de requisições e coordenação
+- **Service Layer:** Implementação das regras de negócio
+- **Model Layer:** Repositories para acesso e manipulação de dados
+- **Database Layer:** PostgreSQL com estrutura relacional
+- **Routing Layer:** Definição e organização das rotas
+- **Middleware:** Autenticação e controle de acesso
 
 #### 4.3 Stack Tecnológica
 - **Backend:** Node.js + Express.js
@@ -90,7 +272,7 @@ A aplicação segue rigorosamente o padrão Model-View-Controller:
 ### 5. Modelo de Dados
 
 #### 5.1 Diagrama Relacional
-![Diagrama Relacional](assets/diagrama-relacional.png)
+![Diagrama Relacional](../assets/diagrama-relacional.png)
 *Estrutura do banco de dados com relacionamentos entre entidades*
 
 #### 5.2 Entidades Principais
