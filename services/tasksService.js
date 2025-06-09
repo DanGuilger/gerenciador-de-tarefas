@@ -5,14 +5,13 @@ class tasksService {
         this.repository = repository;
     }
 
-    async cadastrar(tasks) {
-        const {error} = tasksModel.schema.validate(tasks);
+    async cadastrar(task) {
+        const {error} = tasksModel.schema.validate(task);
         if (error) {
             console.error('[tasksService] - validação falhou', error.details[0].message);
-
             throw new Error(error.details[0].message);
         }
-        return await this.repository.inserir(tasks);
+        return await this.repository.inserir(task);
     }
 
     async listarPorProjeto(projeto_id) {
@@ -28,10 +27,13 @@ class tasksService {
     }
 
     async atualizar(id, task) {
-        const {error} = tasksModel.schema.validate({...task, id, projeto_id: 1, responsavel_id: 1});
+        const {error} = tasksModel.schema.validate({
+            ...task, 
+            projeto_id: task.projeto_id || 1,
+            responsavel_id: task.responsavel_id || 1
+        });
         if (error) {
             console.error('[tasksService] - validação falhou', error.details[0].message);
-
             throw new Error(error.details[0].message);
         }
         return await this.repository.atualizar(id, task);

@@ -9,7 +9,6 @@ class projectsService {
         const {error} = projectsModel.schema.validate(project);
         if (error) {
             console.error('[projectsService] - validação falhou', error.details[0].message);
-
             throw new Error(error.details[0].message);
         }
         return await this.repository.inserir(project);
@@ -28,10 +27,9 @@ class projectsService {
     }
 
     async atualizar(id, project) {
-        const {error} = projectsModel.schema.validate({...project, id, criador_id: 1});
+        const {error} = projectsModel.schema.validate({...project, criador_id: project.criador_id || 1});
         if (error) {
             console.error('[projectsService] - validação falhou', error.details[0].message);
-
             throw new Error(error.details[0].message);
         }
         return await this.repository.atualizar(id, project);

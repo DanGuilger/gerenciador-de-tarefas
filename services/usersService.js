@@ -21,7 +21,6 @@ class usersService {
         const senha_hash = await bcrypt.hash(senha, 10);
         
         const userToValidate = {
-            id: 1,
             nome_completo,
             email,
             senha_hash,
