@@ -1,6 +1,6 @@
 const db = require('../config/database');
 
-class TasksRepository {
+class tasksRepository {
     async inserir(task) {
         const { nome, descricao, status, prioridade, prazo, horario, projeto_id, responsavel_id } = task;
         const result = await db.query(`
@@ -56,4 +56,4 @@ class TasksRepository {
     }
 }
 
-module.exports = TasksRepository;
+module.exports = tasksRepository;

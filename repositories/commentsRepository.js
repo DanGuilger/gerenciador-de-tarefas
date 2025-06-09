@@ -22,6 +22,16 @@ class CommentsRepository {
         return result.rows;
     }
 
+    async buscarPorId(id) {
+        const result = await db.query(`
+            SELECT c.id, c.conteudo, c.criado_em, c.tarefa_id, c.autor_id, u.nome_completo as autor_nome
+            FROM comments c
+            JOIN users u ON c.autor_id = u.id
+            WHERE c.id = $1
+        `, [id]);
+        return result.rows[0];
+    }
+
     async deletar(id) {
         const result = await db.query(`
             DELETE FROM comments
